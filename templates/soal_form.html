@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %}Tambah Soal{% endblock %}
+{% block content %}
+<h2>Form Tambah Soal</h2>
+<form action="/submit" method="POST" enctype="multipart/form-data" class="mt-4">
+  <div class="mb-3">
+    <label for="pertanyaan" class="form-label">Pertanyaan</label>
+    <input type="text" class="form-control" name="pertanyaan" id="pertanyaan">
+  </div>
+  <div class="row">
+    <div class="col">
+      <input type="text" class="form-control" name="pilihan_a" placeholder="Pilihan A">
+    </div>
+    <div class="col">
+      <input type="text" class="form-control" name="pilihan_b" placeholder="Pilihan B">
+    </div>
+    <div class="col">
+      <input type="text" class="form-control" name="pilihan_c" placeholder="Pilihan C">
+    </div>
+    <div class="col">
+      <input type="text" class="form-control" name="pilihan_d" placeholder="Pilihan D">
+    </div>
+  </div>
+  <div class="row mt-3">
+    <div class="col">
+      <input type="text" class="form-control" name="jawaban_benar" placeholder="Jawaban Benar (a/b/c/d)">
+    </div>
+    <div class="col">
+      <input type="number" class="form-control" name="province_id" placeholder="Province ID">
+    </div>
+    <div class="col">
+      <input type="number" class="form-control" name="kelas_id" placeholder="Kelas ID">
+    </div>
+  </div>
+  <div class="mb-3 mt-3">
+    <label for="gambar" class="form-label">Upload Gambar</label>
+    <input type="file" class="form-control" name="gambar" id="gambar">
+  </div>
+  <button type="submit" class="btn btn-primary">Kirim</button>
+</form>
+{% endblock %}
