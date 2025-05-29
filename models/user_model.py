@@ -20,6 +20,10 @@ class UserModel:
         self.cursor.execute("SELECT * FROM users WHERE email = %s", (email,))
         return self.cursor.fetchone()
 
+    def get_all_users(self):
+        self.cursor.execute("SELECT * FROM users")
+        return self.cursor.fetchall()
+
     def create_user(self, name, email, hashed_pw, kelas_id):
         self.cursor.execute(
             "INSERT INTO users (name, email, password, kelas_id) VALUES (%s, %s, %s, %s)",

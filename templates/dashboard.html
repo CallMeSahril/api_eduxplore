@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin EduXplore</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="bg-gray-100 font-sans">
+    <div class="flex h-screen">
+
+        <!-- Sidebar -->
+        <aside class="w-64 bg-white shadow-md">
+            <div class="p-4 border-b">
+                <h1 class="text-2xl font-bold text-blue-600">EduXplore</h1>
+            </div>
+            <nav class="p-4 space-y-2">
+                <a href="/dashboard?tab=soal"
+                    class="block px-4 py-2 rounded hover:bg-blue-100 font-medium text-blue-700 bg-blue-50">
+                    <i class="fas fa-question-circle mr-2"></i>Soal
+                </a>
+                <a href="/dashboard?tab=user" class="block px-4 py-2 rounded hover:bg-blue-100 text-gray-700">
+                    <i class="fas fa-users mr-2"></i>User
+                </a>
+                <a href="/dashboard?tab=kelas" class="block px-4 py-2 rounded hover:bg-blue-100 text-gray-700">
+                    <i class="fas fa-chalkboard-teacher mr-2"></i>Kelas
+                </a>
+                <a href="/dashboard?tab=province" class="block px-4 py-2 rounded hover:bg-blue-100 text-gray-700">
+                    <i class="fas fa-map-marked-alt mr-2"></i>Provinsi
+                </a>
+                <a href="/dashboard?tab=island" class="block px-4 py-2 rounded hover:bg-blue-100 text-gray-700">
+                    <i class="fas fa-globe-asia mr-2"></i>Pulau
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-6 overflow-y-auto">
+            <h2 class="text-2xl font-semibold mb-4">Dashboard</h2>
+            <!-- Notifikasi Flash -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            {% for category, message in messages %}
+            <div
+                class="mb-4 px-4 py-3 rounded text-white {{ 'bg-green-500' if category == 'success' else 'bg-red-500' }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+            {% include "partials/form_tambah_soal.html" %}
+
+            {% if active_tab == 'soal' %}
+            {% include "partials/soal_table.html" %}
+            {% elif active_tab == 'user' %}
+            {% include "partials/user_table.html" %}
+            {% elif active_tab == 'kelas' %}
+            {% include "partials/kelas_table.html" %}
+            {% elif active_tab == 'province' %}
+            {% include "partials/province_table.html" %}
+            {% elif active_tab == 'island' %}
+            {% include "partials/island_table.html" %}
+            {% else %}
+            <p class="text-gray-500">Pilih tab dari sidebar untuk melihat data.</p>
+            {% endif %}
+
+
+        </main>
+
+    </div>
+</body>
+
+</html>

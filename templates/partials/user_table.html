@@ -1,0 +1,71 @@
+<section id="user" class="mb-12">
+  <h3 class="text-xl font-bold mb-2">Data User</h3>
+
+  <!-- Filter Pencarian -->
+  <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
+    <!-- Input Cari Nama -->
+    <div>
+      <label for="search-nama" class="block text-sm font-medium text-gray-700 mb-1">Cari Nama</label>
+      <input type="text" id="search-nama" class="w-64 border px-3 py-2 rounded text-sm" placeholder="Cari nama user...">
+    </div>
+
+    <!-- Filter Kelas -->
+    <div>
+      <label for="filter-kelas-user" class="block text-sm font-medium text-gray-700 mb-1">Filter Kelas</label>
+      <select id="filter-kelas-user" class="border px-3 py-2 rounded text-sm w-44">
+        <option value="">Semua Kelas</option>
+        {% for k in kelas %}
+        <option value="{{ k.id }}">{{ k.nama_kelas }}</option>
+        {% endfor %}
+      </select>
+    </div>
+  </div>
+
+  <!-- Tabel User -->
+  <div class="overflow-x-auto bg-white rounded shadow">
+    <table class="min-w-full text-sm text-left text-gray-700" id="user-table">
+      <thead class="text-xs text-white uppercase bg-green-600">
+        <tr>
+          <th class="px-4 py-2">ID</th>
+          <th class="px-4 py-2">Nama</th>
+          <th class="px-4 py-2">Email</th>
+          <th class="px-4 py-2">Kelas</th>
+        </tr>
+      </thead>
+      <tbody class="bg-white divide-y divide-gray-200">
+        {% for u in users %}
+        <tr data-nama="{{ u.name | lower }}" data-kelas="{{ u.kelas_id }}">
+          <td class="px-4 py-2">{{ u.id }}</td>
+          <td class="px-4 py-2">{{ u.name }}</td>
+          <td class="px-4 py-2">{{ u.email }}</td>
+          <td class="px-4 py-2">{{ u.kelas_id }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<script>
+  const namaInput = document.getElementById('search-nama');
+  const kelasSelect = document.getElementById('filter-kelas-user');
+  const rows = document.querySelectorAll('#user-table tbody tr');
+
+  function filterUsers() {
+    const searchNama = namaInput.value.toLowerCase();
+    const selectedKelas = kelasSelect.value;
+
+    rows.forEach(row => {
+      const nama = row.getAttribute('data-nama');
+      const kelas = row.getAttribute('data-kelas');
+
+      const matchNama = nama.includes(searchNama);
+      const matchKelas = selectedKelas === '' || selectedKelas === kelas;
+
+      row.style.display = (matchNama && matchKelas) ? '' : 'none';
+    });
+  }
+
+  namaInput.addEventListener('input', filterUsers);
+  kelasSelect.addEventListener('change', filterUsers);
+</script>

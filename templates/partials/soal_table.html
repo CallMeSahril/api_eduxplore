@@ -1,0 +1,155 @@
+<section id="soal" class="mb-12">
+    <h3 class="text-xl font-bold mb-4">Data Soal</h3>
+
+
+    <!-- Filter dan Tambah Soal -->
+    <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-6">
+
+        <!-- Filter Dropdowns -->
+        <div class="flex flex-wrap gap-4">
+            <!-- Filter Kelas -->
+            <div>
+                <label for="filter-kelas" class="block mb-1 text-sm font-medium text-gray-700">Filter Kelas</label>
+                <select id="filter-kelas" class="border rounded px-3 py-2 text-sm w-44">
+                    <option value="">Semua Kelas</option>
+                    {% for k in kelas %}
+                    <option value="{{ k.id }}">{{ k.nama_kelas }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Filter Provinsi -->
+            <div>
+                <label for="filter-provinsi" class="block mb-1 text-sm font-medium text-gray-700">Filter
+                    Provinsi</label>
+                <select id="filter-provinsi" class="border rounded px-3 py-2 text-sm w-44">
+                    <option value="">Semua Provinsi</option>
+                    {% for p in provinces %}
+                    <option value="{{ p.id }}">{{ p.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <!-- Tombol Tambah Soal -->
+        <div>
+            <button id="toggle-form-btn"
+                class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded text-sm flex items-center gap-2">
+                <i class="fas fa-plus-circle"></i>
+                Tambah Soal
+            </button>
+        </div>
+    </div>
+    <!-- Tabel Soal -->
+    <div class="overflow-x-auto bg-white rounded shadow">
+        <table class="min-w-full text-sm text-left text-gray-700" id="soal-table">
+            <thead class="text-xs text-white uppercase bg-blue-600">
+                <tr>
+                    <th class="px-4 py-2">ID</th>
+                    <th class="px-4 py-2">Kelas</th>
+                    <th class="px-4 py-2">Provinsi</th>
+                    <th class="px-4 py-2">Pertanyaan</th>
+                    <th class="px-4 py-2">Gambar</th>
+                    <th class="px-4 py-2">Jawaban Benar</th>
+                    <th class="px-4 py-2">Pilihan A</th>
+                    <th class="px-4 py-2">Pilihan B</th>
+                    <th class="px-4 py-2">Pilihan C</th>
+                    <th class="px-4 py-2">Pilihan D</th>
+                    <th class="px-4 py-2">Aksi</th>
+
+                </tr>
+            </thead>
+
+
+            <tbody class="bg-white divide-y divide-gray-200">
+                {% for s in soal %}
+                <tr data-kelas="{{ s.kelas_id }}" data-provinsi="{{ s.province_id }}">
+                    <td class="px-4 py-2">{{ s.id }}</td>
+                    <td class="px-4 py-2">{{ s.kelas_id }}</td>
+                    <td class="px-4 py-2">{{ s.province_name }}</td>
+                    <td class="px-4 py-2">{{ s.pertanyaan or '-' }}</td>
+                    <td class="px-4 py-2">
+                        {% if s.gambar %}
+                        <img src="/{{ s.gambar }}" class="h-12 cursor-pointer rounded border" alt="Soal Gambar"
+                            onclick="openImageModal('/{{ s.gambar }}')">
+                        {% else %}
+                        -
+                        {% endif %}
+                    </td>
+                    <td class="px-4 py-2">{{ s.jawaban_benar }}</td>
+                    <td class="px-4 py-2">{{ s.pilihan_a }}</td>
+                    <td class="px-4 py-2">{{ s.pilihan_b }}</td>
+                    <td class="px-4 py-2">{{ s.pilihan_c }}</td>
+                    <td class="px-4 py-2">{{ s.pilihan_d }}</td>
+                    <td class="px-4 py-2">
+                        <form action="/dashboard/delete/{{ s.id }}" method="POST"
+                            onsubmit="return confirm('Yakin ingin menghapus soal ini?');">
+                            <button type="submit" class="text-red-600 hover:text-red-800 text-sm">
+                                <i class="fas fa-trash-alt"></i> Hapus
+                            </button>
+                        </form>
+                    </td>
+
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <!-- Modal Preview Gambar -->
+        <div id="imageModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+            <div class="bg-white p-4 rounded shadow-lg max-w-md w-full relative">
+                <button onclick="closeImageModal()"
+                    class="absolute top-2 right-2 text-gray-600 hover:text-black text-xl font-bold">&times;</button>
+                <img id="modalImage" src="" alt="Preview Gambar" class="max-h-[70vh] mx-auto rounded" />
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    document.getElementById('filter-kelas').addEventListener('change', filterTable);
+    document.getElementById('filter-provinsi').addEventListener('change', filterTable);
+    function openImageModal(src) {
+        document.getElementById('modalImage').src = src;
+        document.getElementById('imageModal').classList.remove('hidden');
+    }
+
+    function closeImageModal() {
+        document.getElementById('modalImage').src = '';
+        document.getElementById('imageModal').classList.add('hidden');
+    }
+
+    // Tutup modal jika klik luar modal
+    window.addEventListener('click', function (e) {
+        const modal = document.getElementById('imageModal');
+        if (e.target === modal) {
+            closeImageModal();
+        }
+    });
+    function filterTable() {
+        const selectedKelas = document.getElementById('filter-kelas').value;
+        const selectedProvinsi = document.getElementById('filter-provinsi').value;
+
+        const rows = document.querySelectorAll('#soal-table tbody tr');
+
+        rows.forEach(row => {
+            const kelas = row.getAttribute('data-kelas');
+            const provinsi = row.getAttribute('data-provinsi');
+
+            const show =
+                (selectedKelas === '' || parseInt(kelas) === parseInt(selectedKelas)) &&
+                (selectedProvinsi === '' || provinsi === selectedProvinsi);
+
+            row.style.display = show ? '' : 'none';
+        });
+    }
+    document.addEventListener("DOMContentLoaded", function () {
+        const toggleButton = document.getElementById("toggle-form-btn");
+        const form = document.getElementById("form-soal");
+
+        if (toggleButton && form) {
+            toggleButton.addEventListener("click", function () {
+                form.classList.toggle("hidden");
+            });
+        }
+    });
+</script>

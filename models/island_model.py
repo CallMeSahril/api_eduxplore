@@ -1,6 +1,7 @@
 import mysql.connector
 from config import Config
 
+
 class IslandModel:
     def __init__(self):
         self.conn = mysql.connector.connect(
@@ -35,6 +36,10 @@ class IslandModel:
                     'name': row['province_name']
                 })
         return list(result.values())
+
+    def get_all_islands(self):
+        self.cursor.execute("SELECT * FROM island")
+        return self.cursor.fetchall()
 
     def close(self):
         self.cursor.close()

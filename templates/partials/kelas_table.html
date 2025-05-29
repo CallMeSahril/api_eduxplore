@@ -1,0 +1,21 @@
+<section id="kelas" class="mb-12">
+  <h3 class="text-xl font-bold mb-2">Data Kelas</h3>
+  <div class="overflow-x-auto bg-white rounded shadow">
+    <table class="min-w-full text-sm text-left text-gray-700">
+      <thead class="text-xs text-white uppercase bg-yellow-600">
+        <tr>
+          <th class="px-4 py-2">ID</th>
+          <th class="px-4 py-2">Nama Kelas</th>
+        </tr>
+      </thead>
+      <tbody class="bg-white divide-y divide-gray-200">
+        {% for k in kelas %}
+        <tr>
+          <td class="px-4 py-2">{{ k.id }}</td>
+          <td class="px-4 py-2">{{ k.nama_kelas }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>

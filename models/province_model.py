@@ -2,7 +2,7 @@ import mysql.connector
 from config import Config
 
 
-class KelasModel:
+class ProvinceModel:
     def __init__(self):
         self.conn = mysql.connector.connect(
             host=Config.MYSQL_HOST,
@@ -12,8 +12,8 @@ class KelasModel:
         )
         self.cursor = self.conn.cursor(dictionary=True)
 
-    def get_all_kelas(self):
-        self.cursor.execute("SELECT * FROM kelas")
+    def get_all_provinces(self):
+        self.cursor.execute("SELECT * FROM province")
         return self.cursor.fetchall()
 
     def close(self):

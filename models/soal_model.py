@@ -23,8 +23,9 @@ class SoalModel:
     def create_soal(self, pertanyaan, gambar_path, pilihan_a, pilihan_b, pilihan_c,
                     pilihan_d, jawaban_benar, kelas_id, province_id):
         query = """
-            INSERT INTO soal 
-            (pertanyaan, gambar, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawaban_benar, kelas_id, province_id) 
+            INSERT INTO soal
+            (pertanyaan, gambar, pilihan_a, pilihan_b, pilihan_c,
+             pilihan_d, jawaban_benar, kelas_id, province_id)
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
         """
         self.cursor.execute(query, (
@@ -32,6 +33,22 @@ class SoalModel:
             pilihan_c, pilihan_d, jawaban_benar, kelas_id, province_id
         ))
         self.conn.commit()
+
+    def get_all_soal(self):
+        query = """
+            SELECT soal.*, province.name AS province_name
+            FROM soal
+            JOIN province ON soal.province_id = province.id
+
+        """
+        self.cursor.execute(query)
+        return self.cursor.fetchall()
+
+    def delete_soal(self, soal_id):
+        query = "DELETE FROM soal WHERE id = %s"
+        self.cursor.execute(query, (soal_id,))
+        self.conn.commit()
+        return self.cursor.rowcount > 0
 
     def close(self):
         self.cursor.close()

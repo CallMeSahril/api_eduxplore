@@ -1,19 +1,30 @@
-from flask import Flask
+from flask import Flask, redirect, send_from_directory  # ← tambahkan redirect
 from flask_restx import Api
 from routes.auth import auth_ns
 from extensions.bcrypt import bcrypt
 from routes.kelas import kelas_ns
 from routes.soal import soal_ns
 from flask_jwt_extended import JWTManager  # ← Tambahkan ini
-
+from routes.dashboard import dashboard_bp
 from config import Config
 from routes.island import island_ns
+import os
 
 
 def create_app():
-    app = Flask(__name__)
-    app.config.from_object(Config)
+    app = Flask(__name__, template_folder='templates', static_folder='static')
 
+    app.config.from_object(Config)
+    app.register_blueprint(dashboard_bp)
+
+    @app.route('/')
+    def home():
+        return redirect('/dashboard')
+
+
+    @app.route('/uploads/<path:filename>')
+    def uploaded_file(filename):
+        return send_from_directory(os.path.join(app.root_path, 'uploads'), filename)
     # Init extensions
     bcrypt.init_app(app)
     # gunakan yang sama dengan encode
@@ -55,4 +66,4 @@ def create_app():
 
 if __name__ == '__main__':
     app = create_app()
-    app.run(host="192.168.0.104", port=5003, debug=True)
+    app.run(port=5003, debug=True)

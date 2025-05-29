@@ -96,3 +96,16 @@ class SoalController:
         except Exception as e:
             print("[ERROR] Gagal mengambil soal:", e)
             return []
+
+    def delete_soal(self, soal_id):
+        try:
+            soal_model = SoalModel()
+            result = soal_model.delete_soal(soal_id)
+            soal_model.close()
+
+            if result:
+                return {"message": "Soal berhasil dihapus"}, 200
+            else:
+                return {"message": "Soal tidak ditemukan"}, 404
+        except Exception as e:
+            return {"message": f"Gagal menghapus soal: {str(e)}"}, 500
